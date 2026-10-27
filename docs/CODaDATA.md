@@ -8,42 +8,16 @@ This guide describes how to prepare the **NaVQA** evaluation dataset for STaR.
 
 NaVQA is built on the **CODa (Campus Object Dataset)**, a large-scale real-world robotics dataset collected using a **Clearpath Husky** robot. It provides synchronized multimodal sensor data, including RGB images, 3D LiDAR, IMU, and globally consistent poses, across **mixed indoor and outdoor campus environments**. Check the official [CODa download instructions](https://amrl.cs.utexas.edu/coda/download.html) for more details.
 
-### Install the CODa Toolkit
-
-```bash
-git clone git@github.com:ut-amrl/coda-devkit.git
-cd coda-devkit
-
-conda env create -f environment.yml
-conda activate coda
-```
-
 ### Download the Required Sequences
-
-The complete CODa dataset contains **22 sequences**, but STaR only requires the following **7 sequences**:
-
-```text
-0, 3, 4, 6, 16, 21, 22
-```
-
-Download each sequence using:
-
 ```bash
-python scripts/download_split.py -d /path/to/CODa -t sequence -se <sequence_id>
+for seq in 0 3 4 6 16 21 22; do
+    wget -c \
+      "https://web.corral.tacc.utexas.edu/texasrobotics/web_CODa/sequences/${seq}.zip" \
+      -O "$DATA_DIR/${seq}.zip"
+
+    unzip -n "$DATA_DIR/${seq}.zip" -d "$DATA_DIR"
+done
 ```
-
-For example:
-
-```bash
-python scripts/download_split.py -d /path/to/CODa -t sequence -se 0
-```
-
-For convenience, set the dataset root:
-
-```bash
-export CODA_ROOT_DIR=/path/to/CODa
-```
-
 > **Storage Requirement**
 >
 > The processed dataset occupies approximately **335 GB**. During preprocessing, additional LiDAR and intermediate files are downloaded, so we recommend reserving **at least 500 GB** of free disk space.
